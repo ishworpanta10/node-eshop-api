@@ -1,0 +1,26 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "description": "backend api for eshop",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app,js"
+  },
+  "keywords": [
+    "eshop",
+    "node",
+    "api"
+  ],
+  "author": "Ishwor Panta",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.12"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
