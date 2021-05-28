@@ -16,5 +16,7 @@ const productSchema = mongoose.Schema({
   },
 });
 
-// creating  model
+// if we export like this => module.Product = mongoose......
+//  we need to import as :
+// const {Product}= require('../models/products')
 module.exports = mongoose.model("Product", productSchema);
