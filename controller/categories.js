@@ -1,10 +1,11 @@
+const { readFile } = require("fs");
 const Categories = require("../models/categories");
 
 exports.categories_get_all = async (req, res, next) => {
   const categoriesList = await Categories.find().select(
     "_id name icon color image"
   );
-  res.send({
+  res.status(200).send({
     count: categoriesList.length,
     categoriesList: categoriesList,
   });
@@ -14,6 +15,36 @@ exports.categories_get_all = async (req, res, next) => {
       success: false,
     });
   }
+};
+
+exports.categories_get_detail = async (req, res, next) => {
+  const id = req.params.id;
+  // const category = await Categories.findById(id);
+  // if (!category) {
+  //   res.status(404).json({
+  //     success: false,
+  //     message: "category not found",
+  //   });
+  // }
+  // res.status(200).send(category);
+  // alternative
+  Categories.findById(id)
+    .then((catagory) => {
+      if (catagory) {
+        res.status(200).json(catagory);
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "category not found",
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        error: err,
+      });
+    });
 };
 
 exports.categories_post = async (req, res, next) => {
@@ -44,6 +75,28 @@ exports.categories_post = async (req, res, next) => {
   //       success: false,
   //     });
   //   });
+};
+
+exports.categories_update = async (req, res, next) => {
+  const id = req.params.id;
+
+  const category = await Categories.findByIdAndUpdate(
+    id,
+    {
+      name: req.body.name,
+      icon: req.body.icon,
+      color: req.body.color,
+      image: req.body.image ?? "",
+    },
+    {
+      new: true,
+    }
+  );
+  if (!category) {
+    res.status(404).json({ message: "Category cannot be updated" });
+  }
+
+  res.status(200).send(category);
 };
 
 exports.categories_delete = (req, res, next) => {
