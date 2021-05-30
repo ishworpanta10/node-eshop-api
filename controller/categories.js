@@ -111,7 +111,7 @@ exports.categories_delete = (req, res, next) => {
       } else {
         return res.status(404).json({
           success: false,
-          message: "Unabel to delete category",
+          message: "Unable to delete category",
         });
       }
     })
