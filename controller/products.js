@@ -2,7 +2,7 @@ const Product = require("../models/products");
 const Categories = require("../models/categories");
 
 exports.product_get_all = async (req, res) => {
-  const productList = await Product.find();
+  const productList = await Product.find().select("-__v -_id");
   res.send({
     count: productList.length,
     productList: productList,
@@ -15,6 +15,39 @@ exports.product_get_all = async (req, res) => {
     });
   }
 };
+
+exports.product_get = async (req, res) => {
+  const id = req.params.id;
+
+  Product.findById(id)
+    .then((product) => {
+      if (product) {
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "product not found",
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        error: err,
+      });
+    });
+};
+
+// let product = await Product.findById(id);
+// if (!product) {
+//   return res.status(404).send({
+//     success: false,
+//     message: "Product not available",
+//   });
+// }
+
+// res.status(200).send(product);
+// };
 
 exports.product_post = async (req, res) => {
   // creating product from FrontEnd and pushing to db
