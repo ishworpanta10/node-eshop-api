@@ -185,3 +185,20 @@ exports.product_delete = (req, res, next) => {
       });
     });
 };
+
+// custom api for count
+exports.product_count = async (req, res, next) => {
+  const productCount = await Product.countDocuments((count) => count);
+
+  // for no products
+  if (!productCount) {
+    res.status(500).json({
+      message: "No Products",
+      success: false,
+    });
+  }
+
+  res.send({
+    count: productCount,
+  });
+};

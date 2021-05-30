@@ -18,4 +18,7 @@ router.put("/:id", ProductController.product_update);
 // DELETE
 router.delete("/:id", ProductController.product_delete);
 
+// CUSTOM ROUTES
+router.get("/get/count", ProductController.product_count);
+
 module.exports = router;
