@@ -202,3 +202,39 @@ exports.product_count = async (req, res, next) => {
     count: productCount,
   });
 };
+
+exports.product_featured = async (req, res, next) => {
+  const featuredProducts = await Product.find({ isFeatured: true });
+
+  // for no products
+  if (!featuredProducts) {
+    res.status(500).json({
+      message: "No featured Products",
+    });
+  }
+
+  res.send({
+    count: featuredProducts.length,
+    featuredProducts: featuredProducts,
+  });
+};
+
+exports.product_featured_count = async (req, res, next) => {
+  const count = req.params.count ? req.params.count : 0;
+
+  const featuredProducts = await Product.find({ isFeatured: true }).limit(
+    +count
+  );
+
+  // for no products
+  if (!featuredProducts) {
+    res.status(500).json({
+      message: "No featured Products",
+    });
+  }
+
+  res.send({
+    count: featuredProducts.length,
+    featuredProducts: featuredProducts,
+  });
+};
