@@ -4,7 +4,14 @@ const Product = require("../models/products");
 const Categories = require("../models/categories");
 
 exports.product_get_all = async (req, res) => {
-  const productList = await Product.find()
+  // query param
+  //http://localhost:3000/api/v1/products?categories=34567345,3456567
+  let filter = {};
+  if (req.query.categories) {
+    filter = { category: req.query.categories.split(",") };
+  }
+
+  const productList = await Product.find(filter)
     .select("-__v")
     .populate("category", "-_id -__v");
   res.send({
