@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Product = require("../models/products");
 const Categories = require("../models/categories");
 
@@ -20,6 +22,13 @@ exports.product_get_all = async (req, res) => {
 
 exports.product_get = async (req, res) => {
   const id = req.params.id;
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).send({
+      success: false,
+      message: "Invalid Object Id",
+    });
+  }
 
   Product.findById(id)
     .populate("category", "-_id -__v")
@@ -96,6 +105,14 @@ exports.product_post = async (req, res) => {
 };
 
 exports.product_update = async (req, res) => {
+  const id = req.params.id;
+  // checking if valid obj id
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).send({
+      success: false,
+      message: "Invalid Object Id",
+    });
+  }
   // validating category
   const category = await Categories.findById(req.body.category);
   if (!category) {
@@ -106,8 +123,6 @@ exports.product_update = async (req, res) => {
         console.log("error", err);
       });
   }
-
-  const id = req.params.id;
 
   const product = await Product.findByIdAndUpdate(
     id,
@@ -141,6 +156,13 @@ exports.product_update = async (req, res) => {
 
 exports.product_delete = (req, res, next) => {
   const id = req.params.id;
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).send({
+      success: false,
+      message: "Invalid Object Id",
+    });
+  }
 
   Product.findByIdAndRemove(id)
     .then((product) => {
