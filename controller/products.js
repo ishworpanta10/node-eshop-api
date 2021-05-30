@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const Categories = require("../models/categories");
 
 exports.product_get_all = async (req, res) => {
   const productList = await Product.find();
@@ -15,24 +16,45 @@ exports.product_get_all = async (req, res) => {
   }
 };
 
-exports.product_post = (req, res) => {
+exports.product_post = async (req, res) => {
   // creating product from FrontEnd and pushing to db
-  const product = new Product({
-    // this key value must be same from which frontend data is send
+
+  const category = await Categories.findById(req.body.category);
+  if (!category) {
+    return res.status(400).send({ message: "Invalid Category" });
+  }
+
+  let product = new Product({
     name: req.body.name,
+    description: req.body.description,
+    richDescription: req.body.richDescription,
     image: req.body.image,
+    images: req.body.images,
+    brand: req.body.brand,
+    price: req.body.price,
+    category: req.body.category,
     countInStock: req.body.countInStock,
+    rating: req.body.rating,
+    numReviews: req.body.numReviews,
+    isFeatured: req.body.isFeatured,
   });
 
-  product
-    .save()
-    .then((createdProduct) => {
-      res.status(201).json(createdProduct);
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: err,
-        success: false,
-      });
+  product = await product.save();
+  if (!product) {
+    return res.status(500).json({
+      message: "product cannot be created",
     });
+  }
+  res.send(product);
+  // product
+  //   .save()
+  //   .then((createdProduct) => {
+  //     res.status(201).json(createdProduct);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json({
+  //       error: err,
+  //       success: false,
+  //     });
+  //   });
 };
