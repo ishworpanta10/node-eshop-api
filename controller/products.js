@@ -13,7 +13,7 @@ exports.product_get_all = async (req, res) => {
 
   const productList = await Product.find(filter)
     .select("-__v")
-    .populate("category", "-_id -__v");
+    .populate("category", " -__v");
   res.send({
     count: productList.length,
     productList: productList,
@@ -38,7 +38,7 @@ exports.product_get = async (req, res) => {
   }
 
   Product.findById(id)
-    .populate("category", "-_id -__v")
+    .populate("category", "-__v")
     .then((product) => {
       if (product) {
         res.status(200).json(product);

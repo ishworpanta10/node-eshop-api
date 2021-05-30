@@ -73,6 +73,16 @@ const productSchema = mongoose.Schema({
   },
 });
 
+// creating frontend friendly id from _id
+// creating frontend friendly id from _id
+productSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+productSchema.set("toJSON", {
+  virtuals: true,
+});
+
 // if we export like this => module.Product = mongoose......
 //  we need to import as :
 // const {Product}= require('../models/products')

@@ -20,4 +20,13 @@ const categorySchema = mongoose.Schema({
   },
 });
 
+// creating frontend friendly id from _id
+categorySchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+categorySchema.set("toJSON", {
+  virtuals: true,
+});
+
 module.exports = mongoose.model("Category", categorySchema);
