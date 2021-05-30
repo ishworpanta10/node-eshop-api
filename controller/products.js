@@ -2,7 +2,9 @@ const Product = require("../models/products");
 const Categories = require("../models/categories");
 
 exports.product_get_all = async (req, res) => {
-  const productList = await Product.find().select("-__v -_id");
+  const productList = await Product.find()
+    .select("-_id -__v")
+    .populate("category", "-_id -__v");
   res.send({
     count: productList.length,
     productList: productList,
@@ -20,6 +22,7 @@ exports.product_get = async (req, res) => {
   const id = req.params.id;
 
   Product.findById(id)
+    .populate("category", "-_id -__v")
     .then((product) => {
       if (product) {
         res.status(200).json(product);
