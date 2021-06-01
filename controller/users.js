@@ -174,3 +174,18 @@ exports.user_register = async (req, res, next) => {
 
   res.send(user);
 };
+
+exports.user_count = async (req, res) => {
+  const userLength = await User.countDocuments((count) => count);
+
+  if (!userLength) {
+    return res.status(500).json({
+      success: false,
+      message: "error getting user count",
+    });
+  }
+
+  res.status(200).json({
+    userLength: userLength,
+  });
+};

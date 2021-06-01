@@ -14,11 +14,12 @@ router.put("/:id", UserController.user_update);
 
 router.delete("/:id", UserController.user_delete);
 
+router.get("/get/count", UserController.user_count);
 
 // for login
-router.post("/login", UserController.user_login)
+router.post("/login", UserController.user_login);
 
 // for register
-router.post("/login", UserController.user_register)
+router.post("/login", UserController.user_register);
 
 module.exports = router;
