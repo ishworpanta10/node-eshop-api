@@ -134,8 +134,15 @@ exports.order_delete = (req, res) => {
   const id = req.params.id;
 
   Order.findByIdAndRemove(id)
-    .then((order) => {
+    .then(async (order) => {
       if (order) {
+        //   deleting order-items table data after deleting order
+        //   cascading delete
+        //   we are storing only id in order table in mongoose so delete by orderItem
+
+        await order.orderItems.map(async (orderItem) => {
+          await OrderItem.findByIdAndRemove(orderItem);
+        });
         return res.status(200).json({
           success: true,
           message: "Order deleted successfully",
