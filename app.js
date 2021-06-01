@@ -6,6 +6,8 @@ const morgan = require("morgan");
 
 const mongoose = require("mongoose");
 
+const authJwt = require("./helper/jwt");
+
 const cors = require("cors");
 // Routes
 const productsRouter = require("./routers/products");
@@ -26,6 +28,9 @@ app.use(express.json());
 
 // for logging data in console
 app.use(morgan("tiny"));
+
+// for auth jwt
+app.use(authJwt);
 
 // CONSTANTS
 const api = process.env.API_URL;
