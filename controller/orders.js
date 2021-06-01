@@ -83,7 +83,26 @@ exports.order_post = async (req, res) => {
   // need to resolve all order items at once by using Promise.all and awaiting the resolved ids;
   const orderItemsIdsResolved = await orderItemsIds;
 
-  console.log(orderItemsIdsResolved);
+  //   console.log(orderItemsIdsResolved);
+
+  // calculating total price from database
+  const totalPrices = await Promise.all(
+    orderItemsIdsResolved.map(async (orderItemsId) => {
+      const orderItem = await OrderItem.findById(orderItemsId).populate(
+        "product",
+        "price"
+      );
+
+      const totalPrice = orderItem.product.price * orderItem.product.quantity;
+
+      return totalPrice;
+      // this return the array of product price as : [200, 400]
+    })
+  );
+
+  //   console.log(totalPrices);
+  // initial value is 0 and combine a and b
+  const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
 
   let order = new Order({
     orderItems: orderItemsIdsResolved,
