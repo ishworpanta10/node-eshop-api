@@ -53,7 +53,8 @@ exports.order_get_detail = async (req, res) => {
         path: "product",
         populate: "category",
       },
-    });
+    })
+    .sort({ dateOrdered: -1 });
 
   if (!order) {
     return res.status(500).send({
@@ -224,5 +225,35 @@ exports.order_count = async (req, res, next) => {
   res.send({
     count: orderCount,
     success: true,
+  });
+};
+
+exports.get_user_order_list = async (req, res, next) => {
+  const userOrderedList = await Order.find({
+    user: req.params.userId,
+  }).populate({
+    path: "orderItems",
+    populate: {
+      path: "product",
+      populate: "category",
+    },
+  });
+
+  if (userOrderedList.length === 0) {
+    res.status(200).json({
+      message: "No User Orders",
+      success: true,
+    });
+  }
+
+  if (!userOrderedList) {
+    res.status(500).json({
+      message: "Error getting user order",
+      success: false,
+    });
+  }
+  res.status(200).send({
+    count: userOrderedList.length,
+    userOrderList: userOrderedList,
   });
 };

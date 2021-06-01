@@ -17,6 +17,9 @@ router.delete("/:id", OrdersController.order_delete);
 // total sales
 router.get("/get/totalsales", OrdersController.order_total_sales);
 
-router.get("/get/ordercount", OrdersController.order_count)
+router.get("/get/ordercount", OrdersController.order_count);
+
+// getting total order of specific user
+router.get("/get/userorders/:userId", OrdersController.get_user_order_list);
 
 module.exports = router;
