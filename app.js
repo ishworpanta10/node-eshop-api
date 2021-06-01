@@ -32,10 +32,14 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 // for auth jwt
-app.use(authJwt);
+app.use(authJwt());
 
 // for errors
 app.use(errorHandler);
+
+// for static images folders
+// __dirname gives the root path
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 
 // CONSTANTS
 const api = process.env.API_URL;
