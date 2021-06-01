@@ -123,6 +123,7 @@ exports.user_login = async (req, res, next) => {
     const token = jwt.sign(
       {
         userId: user.id,
+        isAdmin: user.isAdmin,
       },
       secret,
       {

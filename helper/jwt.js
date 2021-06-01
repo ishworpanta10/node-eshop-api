@@ -8,6 +8,7 @@ function authJwt() {
     expressJwt({
       secret,
       algorithms: ["HS256"],
+      isRevoked: isRevoked,
     })
       // exclude api for authorization
       .unless({
@@ -28,6 +29,13 @@ function authJwt() {
         ],
       })
   );
+}
+
+async function isRevoked(req, payload, done) {
+  if (!payload.isAdmin) {
+    return done(null, true);
+  }
+  done();
 }
 
 module.exports = authJwt;
