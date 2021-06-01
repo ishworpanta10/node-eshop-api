@@ -2,7 +2,14 @@ const Order = require("../models/orders");
 const OrderItem = require("../models/order-items");
 
 exports.order_get_all = async (req, res) => {
-  const orderList = await Order.find();
+  const orderList = await Order.find()
+    .populate("users", "name", "email")
+    // populate order based on ordered date
+    // .sort("dateOrdered");
+    // newest to oldest
+    .sort({
+      dateOrdered: -1,
+    });
 
   if (!orderList) {
     return res.status(500).send({
@@ -27,7 +34,26 @@ exports.order_get_detail = async (req, res) => {
     });
   }
 
-  const order = await Order.findById(id);
+  const order = await Order.findById(id)
+    .populate("users", "name", "email")
+
+    // for populating orderItems
+    // .populate('orderItems');
+
+    // for populating orderItems with produst details
+    // .populate({
+    //   path: "orderItems",
+    //   populate: "product",
+    // });
+
+    // for populating orderItems with product details along with category populate
+    .populate({
+      path: "orderItems",
+      populate: {
+        path: "product",
+        populate: "category",
+      },
+    });
 
   if (!order) {
     return res.status(500).send({
