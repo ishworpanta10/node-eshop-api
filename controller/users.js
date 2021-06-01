@@ -4,6 +4,8 @@ const User = require("../models/users");
 
 const bcrypt = require("bcryptjs");
 
+const jwt = require("jsonwebtoken");
+
 exports.user_get_all = async (req, res, next) => {
   const userList = await User.find().select("-passwordHash");
   if (!userList) {
@@ -105,4 +107,36 @@ exports.user_delete = (req, res, next) => {
         error: err,
       });
     });
+};
+
+exports.user_login = async (req, res, next) => {
+  const user = User.findOne({ email: req.body.email });
+  // checking if user exists in db
+  if (!user) {
+    return res.status(404).send({
+      message: "User not found",
+    });
+  }
+  // if user exits compare password
+  if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
+    const secret = process.env.SECRET_KEY;
+    const token = jwt.sign(
+      {
+        userId: user.id,
+      },
+      secret,
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.status(200).send({
+      message: "User Authenticated",
+      email: user.email,
+      token: token,
+    });
+  } else {
+    res.status(200).send({
+      message: "password is wrong !",
+    });
+  }
 };

@@ -14,4 +14,8 @@ router.put("/:id", UserController.user_update);
 
 router.delete("/:id", UserController.user_delete);
 
+
+// for login
+router.post("/login", UserController.user_login)
+
 module.exports = router;
