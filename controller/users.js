@@ -140,3 +140,36 @@ exports.user_login = async (req, res, next) => {
     });
   }
 };
+
+exports.user_register = async (req, res, next) => {
+  const user = await User.findOne({
+    email: req.body.email,
+  });
+
+  if (user) {
+    return res.status(200).send({
+      message: "User already exists with email address",
+    });
+  }
+
+  let user = new User({
+    name: req.body.name,
+    email: req.body.email,
+    passwordHash: bcrypt.hashSync(req.body.password, 10),
+    phone: req.body.phone,
+    isAdmin: req.body.isAdmin,
+    street: req.body.street,
+    apartment: req.body.apartment,
+    zip: req.body.zip,
+    city: req.body.city,
+    country: req.body.country,
+  });
+  user = await user.save();
+
+  if (!user)
+    return res.status(404).json({
+      message: "user cannot be created",
+    });
+
+  res.send(user);
+};
