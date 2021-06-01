@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 
 const authJwt = require("./helper/jwt");
 
+const errorHandler = require("./helper/errror-handler");
+
 const cors = require("cors");
 // Routes
 const productsRouter = require("./routers/products");
@@ -31,6 +33,9 @@ app.use(morgan("tiny"));
 
 // for auth jwt
 app.use(authJwt);
+
+// for errors
+app.use(errorHandler);
 
 // CONSTANTS
 const api = process.env.API_URL;
