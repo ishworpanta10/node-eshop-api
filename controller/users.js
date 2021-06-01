@@ -143,11 +143,11 @@ exports.user_login = async (req, res, next) => {
 };
 
 exports.user_register = async (req, res, next) => {
-  const user = await User.findOne({
+  const userExists = await User.findOne({
     email: req.body.email,
   });
 
-  if (user) {
+  if (userExists) {
     return res.status(200).send({
       message: "User already exists with email address",
     });
