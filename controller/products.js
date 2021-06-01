@@ -76,11 +76,16 @@ exports.product_post = async (req, res) => {
     return res.status(400).send({ message: "Invalid Category" });
   }
 
+  // req.protocol return http
+  const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+
+  const fileName = req.file.filename;
+
   let product = new Product({
     name: req.body.name,
     description: req.body.description,
     richDescription: req.body.richDescription,
-    image: req.body.image,
+    image: `${basePath}${fileName}`,
     images: req.body.images,
     brand: req.body.brand,
     price: req.body.price,
