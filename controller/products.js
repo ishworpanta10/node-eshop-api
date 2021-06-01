@@ -73,7 +73,17 @@ exports.product_post = async (req, res) => {
 
   const category = await Categories.findById(req.body.category);
   if (!category) {
-    return res.status(400).send({ message: "Invalid Category" });
+    return res
+      .status(400)
+      .send({ message: "Invalid Category", success: false });
+  }
+
+  // checking if file is send from frontend
+  const file = req.file;
+  if (!file) {
+    return res
+      .status(400)
+      .send({ message: "Inage is required for the product", success: false });
   }
 
   // req.protocol return http
