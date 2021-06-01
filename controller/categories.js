@@ -19,6 +19,15 @@ exports.categories_get_all = async (req, res, next) => {
 
 exports.categories_get_detail = async (req, res, next) => {
   const id = req.params.id;
+  // for this need to check valid id also as :
+
+  // if (!mongoose.isValidObjectId(id)) {
+  //   return res.status(404).send({
+  //     success: false,
+  //     message: "Invalid Object Id",
+  //   });
+  // }
+
   // const category = await Categories.findById(id);
   // if (!category) {
   //   res.status(404).json({
@@ -79,6 +88,13 @@ exports.categories_post = async (req, res, next) => {
 
 exports.categories_update = async (req, res, next) => {
   const id = req.params.id;
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).send({
+      success: false,
+      message: "Invalid Object Id",
+    });
+  }
 
   const category = await Categories.findByIdAndUpdate(
     id,
