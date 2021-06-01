@@ -46,6 +46,15 @@ router.post("/", uploadOptions.single("image"), ProductController.product_post);
 // UPDATE
 router.put("/:id", ProductController.product_update);
 
+// GALLERY-IMAGES
+//for uploading the gallery images we use separate api and update product model as:
+
+router.put(
+  "/gallery-images/:id",
+  uploadOptions.array("images", 10),
+  ProductController.gallery_images
+);
+
 // DELETE
 router.delete("/:id", ProductController.product_delete);
 

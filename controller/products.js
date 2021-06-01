@@ -96,7 +96,6 @@ exports.product_post = async (req, res) => {
     description: req.body.description,
     richDescription: req.body.richDescription,
     image: `${basePath}${fileName}`,
-    images: req.body.images,
     brand: req.body.brand,
     price: req.body.price,
     category: req.body.category,
@@ -153,7 +152,6 @@ exports.product_update = async (req, res) => {
       description: req.body.description,
       richDescription: req.body.richDescription,
       image: req.body.image ?? "",
-      images: req.body.images ?? [""],
       brand: req.body.brand,
       price: req.body.price,
       category: req.body.category,
@@ -259,4 +257,47 @@ exports.product_featured_count = async (req, res, next) => {
     count: featuredProducts.length,
     featuredProducts: featuredProducts,
   });
+};
+
+//for uploading the gallery images we use separate api and update product model as:
+exports.gallery_images = async (req, res) => {
+  const id = req.params.id;
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(404).send({
+      success: false,
+      message: "Invalid Object Id",
+    });
+  }
+
+  const files = req.files;
+
+  let imagePaths = [];
+
+  // req.protocol return http
+  const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+
+  if (files) {
+    files.map((file) => {
+      imagePaths.push(`${basePath}${file.fileName}`);
+    });
+  }
+
+  const product = await Product.findByIdAndUpdate(
+    id,
+    {
+      images: imagePaths,
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!product) {
+    return res.status(404).send({
+      message: "product gallery images cannot be uploaded",
+    });
+  }
+
+  res.status(200).send(product);
 };
