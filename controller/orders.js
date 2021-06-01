@@ -180,3 +180,49 @@ exports.order_delete = (req, res) => {
       });
     });
 };
+
+exports.order_total_sales = async (req, res) => {
+  // totalPrice is the field in Order table
+  const totalSales = await Order.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalsales: {
+          $sum: "$totalPrice",
+        },
+      },
+    },
+  ]);
+
+  if (!totalSales) {
+    return res.status(400).send({
+      message: "Order sales cannot be generated",
+    });
+  }
+
+  //   res.status(200).send({
+  //     totalSales: totalSales,
+  //   });
+  // we can pop item in array to show only totalsales as:
+  res.status(200).send({
+    totalsales: totalSales.pop().totalsales,
+  });
+};
+
+// custom api for count
+exports.order_count = async (req, res, next) => {
+  const orderCount = await Order.countDocuments((count) => count);
+
+  // for no products
+  if (!orderCount) {
+    res.status(500).json({
+      message: "No Orders",
+      success: false,
+    });
+  }
+
+  res.send({
+    count: orderCount,
+    success: true,
+  });
+};
