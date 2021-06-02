@@ -279,7 +279,7 @@ exports.gallery_images = async (req, res) => {
 
   if (files) {
     files.map((file) => {
-      imagePaths.push(`${basePath}${file.fileName}`);
+      imagePaths.push(`${basePath}${file.filename}`);
     });
   }
 

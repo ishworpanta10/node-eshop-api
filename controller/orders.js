@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Order = require("../models/orders");
 const OrderItem = require("../models/order-items");
 
@@ -19,7 +21,7 @@ exports.order_get_all = async (req, res) => {
   }
 
   res.status(200).send({
-    count: orderList.lenth,
+    count: orderList.length,
     orderList: orderList,
   });
 };
@@ -84,7 +86,7 @@ exports.order_post = async (req, res) => {
   // need to resolve all order items at once by using Promise.all and awaiting the resolved ids;
   const orderItemsIdsResolved = await orderItemsIds;
 
-  //   console.log(orderItemsIdsResolved);
+  // console.log(orderItemsIdsResolved);
 
   // calculating total price from database
   const totalPrices = await Promise.all(
@@ -94,14 +96,15 @@ exports.order_post = async (req, res) => {
         "price"
       );
 
-      const totalPrice = orderItem.product.price * orderItem.product.quantity;
-
+      const totalPrice = orderItem.product.price * orderItem.quantity;
+      console.log(totalPrice);
       return totalPrice;
+
       // this return the array of product price as : [200, 400]
     })
   );
 
-  //   console.log(totalPrices);
+  console.log(totalPrices);
   // initial value is 0 and combine a and b
   const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
 

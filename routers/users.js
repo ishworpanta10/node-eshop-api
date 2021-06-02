@@ -20,6 +20,6 @@ router.get("/get/count", UserController.user_count);
 router.post("/login", UserController.user_login);
 
 // for register
-router.post("/login", UserController.user_register);
+router.post("/register", UserController.user_register);
 
 module.exports = router;

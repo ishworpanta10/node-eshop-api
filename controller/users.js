@@ -110,7 +110,7 @@ exports.user_delete = (req, res, next) => {
 };
 
 exports.user_login = async (req, res, next) => {
-  const user = User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email });
   // checking if user exists in db
   if (!user) {
     return res.status(404).send({
